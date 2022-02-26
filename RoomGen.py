@@ -9,15 +9,20 @@ def ascii_room(depth: int, width: int, height: int, top_down: bool) -> str:
         output += depth * ('_') + (width + 2) * (' ') + depth * ('_') + '\n'
     else:
         for i  in range(depth):
-            output += (i) * (' ') + '\\' + 2 * (depth - i) * (' ') + (width) * (' ') + '/' + (i) * (' ') + '\n'
+            output += (''.join([wall_lines(j) for j in range(i)])) + '\\' + 2 * (depth - i) * (' ') + (width) * (' ') + '/' + (''.join([wall_lines(j) for j in range(i)]))[::-1] + '\n'
 
     for i in range(height):
-        output += depth * (' ') + '|' + width * ('#') + '|' + depth * (' ') + '\n'
+        output += (''.join([wall_lines(j) for j in range(depth)])) + '|' + width * ('#') + '|' + (''.join([wall_lines(j) for j in range(depth)]))[::-1] + '\n'
 
     for i  in range(depth, 0, -1):
-        output += (i - 1) * (' ') + '/' + 2 * (depth - i) * (' ') + (width + 2) * (' ') + '\\' + (i - 1) * (' ') + '\n'
+        output += (''.join([wall_lines(j) for j in range(i - 1)])) + '/' + 2 * (depth - i) * (' ') + (width + 2) * (' ') + '\\' + (''.join([wall_lines(j) for j in range(i - 1)]))[::-1] + '\n'
 
     return output
+
+def wall_lines(i: int):
+    if i % 2 == 0:
+        return '|'
+    return ' '
 
 def texture(apply_to: str, c: str, p: int) -> str: # c is a char texture, p is probability of c appearing, [0 <= p <= 100]
     output = apply_to
@@ -28,7 +33,7 @@ def texture(apply_to: str, c: str, p: int) -> str: # c is a char texture, p is p
     return output
 
 def __main__():
-    r = texture(ascii_room(8,80, 10, False), '.', 5)
+    r = texture(ascii_room(4, 50, 10, False), '.', 5)
     print(r)
     with open("room.txt", "w") as f:
         f.write(r)
